@@ -26,6 +26,13 @@ def loadMulti(imName, *args):
     import numpy as np
     from scipy import misc
     
+    import numpy as np
+    import h5py
+    import matplotlib.pyplot as plt
+    # f = h5py.File('somefile.mat','r')
+    # data = f.get('data/variable1')
+    # data = np.array(data) # For converting to a NumPy array
+    
     annotationName = args[0] 
     if len(args) < 2:
         dirPath = ''
@@ -36,16 +43,20 @@ def loadMulti(imName, *args):
     # load the multispectral image
     im = sio.loadmat(dirPath+imName)
     multiIm = im['immulti']
+    # f = h5py.File(dirPath+imName,'r')
+    # data = f.get('data/variable1')
+    # multiIm = np.array(data) # For converting to a NumPy array
         
     # make annotation image of zeros
     annotationIm = np.zeros([multiIm.shape[0],multiIm.shape[1],3],dtype=bool)
     
     # read the mask image
-    aIm = misc.imread(dirPath+annotationName)
+    aIm = plt.imread(dirPath+annotationName)
+    # aIm = aIm.astype('uint8')
     
     # put in ones
     for i in range(0,3):
-        annotationIm[:,:,i] = (aIm[:,:,i] == 255) 
+        annotationIm[:,:,i] = (aIm[:,:,i] == 1.0) 
     
     return (multiIm, annotationIm)
 
