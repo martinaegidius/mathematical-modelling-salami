@@ -2,6 +2,7 @@
 dirIn = '/home/max/Desktop/s194119/Salami/Exercise 2 - Salami/Data/data/'
 import helpFunctions as hf 
 import matplotlib.pyplot as plt
+import matplotlib.colors
 import numpy as np
 from scipy import io
 from scipy import stats
@@ -76,3 +77,31 @@ def IntersectionSaver(normArr,x): #save intersections in a numpy array
 
 complicatedTresholds = IntersectionSaver(normArr,x)
 
+
+
+def inference(image,tresholds):
+    predictions = np.empty([514,514,2,image.shape[2]])
+    for j in range(len(tresholds)): #
+        predictions[:,:,0,j] = (image[:,:,j]<tresholds[j])                        
+        predictions[:,:,1,j] = (image[:,:,j]>tresholds[j])                        
+    return predictions
+
+def inferencePlot(predictions,image):
+    fmap = matplotlib.colors.ListedColormap(['green','blue'])
+    #mmap = matplotlib.colors.ListedColormap(['blue','#FFFFFF00'])
+    
+    plt.figure()
+    fig, axs = plt.subplots(4,5,figsize=(21,17))
+    for i in range(4):
+        for j in range(5):
+            axs[i,j].imshow(image[:,:,i+j],cmap="gray")
+            axs[i,j].imshow(predictions[:,:,0,i+j],cmap = fmap, alpha=0.5)
+     #       axs[i,j].imshow(predictions[:,:,1,i+j],cmap = mmap, alpha=0.8)
+            axs[i,j].axis('off')
+            axs[i,j].set_title("Ch"+str(5*i+j),fontsize=18,pad=-2)
+            #print(str(i) + "    " + str(j))
+            
+            
+preds = inference(multiIm,simpleTresholds)    
+inferencePlot(preds,multiIm)
+    
