@@ -70,7 +70,7 @@ def findIntersection(normArr,COI,x,plot): #find intersection between the normal-
         plt.style.use('ggplot')
         plt.plot(x,normArr[0,COI,:],'r1',alpha=0.5)
         plt.plot(x,normArr[1,COI,:],'b1',alpha=0.5)
-        plt.axvline(x[multSects[0]])
+        #plt.axvline(x[multSects[0]])
         plt.axvline(x[multSects[1]])
         plt.show()
     else: 
@@ -83,7 +83,7 @@ minIntersect, pixelVals = findIntersection(normArr,1,x,0)
 def IntersectionSaver(normArr,x): #save intersections in a numpy array
     tresholds = np.empty([normArr.shape[1]])
     for i in range(len(tresholds)):
-        minIntersect, pixelVals = findIntersection(normArr,i,x,0)
+        minIntersect, pixelVals = findIntersection(normArr,i,x,1)
         tresholds[i] = pixelVals[1]
     return tresholds
 
