@@ -65,12 +65,11 @@ def findIntersection(normArr,COI,x,plot): #find intersection between the normal-
     intersection = np.argmax(frac==True)
     print("Intersections at pixel intensities " + str(x[multSects[0]]) + " and "+str(x[multSects[1]]))
     
-    
     if(plot==1):
         plt.style.use('ggplot')
         plt.plot(x,normArr[0,COI,:],'r1',alpha=0.5)
         plt.plot(x,normArr[1,COI,:],'b1',alpha=0.5)
-        #plt.axvline(x[multSects[0]])
+        plt.axvline(x[multSects[0]])
         plt.axvline(x[multSects[1]])
         plt.show()
     else: 
@@ -181,9 +180,6 @@ S = calcDiscriminant(cov, X, meanArr)
 outputImages = multivariateInference(S)
 
 fig = plt.figure()
-color_map = {1: np.array([0,255,0]),
-             2: np.array([0,0,255])}
-#mmap = matplotlib.colors.ListedColormap(['#FFFFFF00','green'])
 fmap = matplotlib.colors.ListedColormap(['green','#FFFFFF00','blue'])
 im1 = plt.imshow(outputImages[:,:],cmap=fmap,interpolation="None",alpha=1)
 #im2=plt.imshow(outputImages[:,:,1],cmap=fmap,alpha=0.9)
