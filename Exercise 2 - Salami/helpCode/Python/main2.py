@@ -80,18 +80,24 @@ def inference(image,tresholds):
     
     return predictions
 
-def inferencePlot(predictions,image):
+def inferencePlot(predictions,image,annotation):
     fmap = matplotlib.colors.ListedColormap(['green','blue'])    
+    mfmap = matplotlib.colors.ListedColormap(['#FFFFFF00','red'])
+    afmap = matplotlib.colors.ListedColormap(['#FFFFFF00','pink'])
     plt.figure()
     fig, axs = plt.subplots(4,5,figsize=(21,17))
     for i in range(4):
         for j in range(5):
-            axs[i,j].imshow(image[:,:,i+j],cmap="gray")
-            axs[i,j].imshow(predictions[:,:,0,i+j],cmap = fmap, alpha=0.5)
+            axs[i,j].imshow(image[:,:,i+j],cmap="gray", alpha=0.9)
+            axs[i,j].imshow(predictions[:,:,0,i+j],cmap = fmap, alpha=0.6)
+            axs[i,j].imshow(annotation[:,:,1],cmap=afmap,alpha = 0.6)
+            axs[i,j].imshow(annotation[:,:,2],cmap=mfmap,alpha=0.6)
+            
             axs[i,j].axis('off')
             axs[i,j].set_title("Ch"+str(5*i+j),fontsize=18,pad=-2)
+    return fig
     
-    plt.savefig(f"{day}_simpleplot.png")
+    #plt.savefig(f"{dayModel}_simpleplot_on_{day}.png")
             
             
 
@@ -259,7 +265,7 @@ def runAll():
         normArr = normDist(meanArr,devArr,x) 
         minIntersect, pixelVals = findIntersection(normArr,1,x,0)
         complicatedTresholds = IntersectionSaver(normArr,x)
-        preds = inference(multiIm,simpleTresholds)    
+        preds = inference(multiIm,simpleTresholds,annotationIm)    
         # inferencePlot(preds,multiIm)
         X, cov = calcCov(multiIm)
         S = calcDiscriminant(cov, X, meanArr,annotationIm,multiIm)
@@ -317,7 +323,8 @@ def modelEval(dayModel,meanArr,simpleTresholds):
         
         
         preds = inference(multiIm,simpleTresholds)    
-        inferencePlot(preds,multiIm)
+        figSimple = inferencePlot(preds,multiIm,annotationIm)
+        plt.savefig(f"{dayModel}_simpleplot_on_{day}.png")
         
         X, cov = calcCov(multiIm)
         S = calcDiscriminant(cov, X, meanArr,annotationIm,multiIm)
@@ -327,7 +334,11 @@ def modelEval(dayModel,meanArr,simpleTresholds):
         fig = plt.figure()
     
         fmap = matplotlib.colors.ListedColormap(['green','#FFFFFF00','blue'])
+        mfmap = matplotlib.colors.ListedColormap(['#FFFFFF00','red'])
+        afmap = matplotlib.colors.ListedColormap(['#FFFFFF00','pink'])
         im1 = plt.imshow(outputImages[:,:],cmap=fmap,interpolation="None",alpha=1)
+        plt.imshow(annotationIm[:,:,1],cmap=afmap,alpha = 0.6)
+        plt.imshow(annotationIm[:,:,2],cmap=mfmap,alpha=0.6)
         plt.title(day) #something like this (we need enumeration)
         #plt.show()
         plt.savefig(f'{dayModel}_on_{day}.png')
